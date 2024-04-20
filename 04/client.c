@@ -57,7 +57,7 @@ int query(int connection_fd, const char *text)
 
   // null terminate reply data
   read_buffer[4 + len] = '\0';
-  printf("Server says: %s\n", read_buffer);
+  printf("Server says: %s\n", &read_buffer[4]);
   return 0;
 }
 
@@ -83,6 +83,6 @@ int main()
     return 1;
   }
 
-  query(fd, "Hey there");
+  query(fd, "What's going on you ugly son of a gun");
   close(fd);
 }

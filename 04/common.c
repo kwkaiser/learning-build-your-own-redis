@@ -14,7 +14,7 @@ int read_full(int connection_fd, char *buf, size_t n)
 
     if (rv <= 0)
     {
-      printf("Error reading");
+      printf("Read full error: rv: %d\n", rv);
       return -1;
     }
 
@@ -32,7 +32,7 @@ int write_full(int connection_fd, char *buf, size_t n)
     ssize_t rv = write(connection_fd, buf, n);
     if (rv <= 0)
     {
-      printf("Error writing");
+      printf("Write full error: rv: %d\n", rv);
       return -1;
     }
 

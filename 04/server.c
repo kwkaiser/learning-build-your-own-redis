@@ -20,7 +20,7 @@ int handle_one_request(int connection_fd)
     }
     else
     {
-      printf("read_full() error\n");
+      printf("error parsing message length: %d\n", err);
     }
     return err;
   }
@@ -37,7 +37,7 @@ int handle_one_request(int connection_fd)
   err = read_full(connection_fd, &read_buffer[4], len);
   if (err)
   {
-    printf("read_full() error\n");
+    printf("error parsing message body: %d\n", err);
     return err;
   }
 
@@ -46,7 +46,7 @@ int handle_one_request(int connection_fd)
   printf("Client says %s\n", &read_buffer[4]);
 
   // Reply using same protocol
-  const char reply[] = "world";
+  char reply[] = "world";
   char write_buffer[4 + sizeof(reply)];
   len = strlen(reply);
 
@@ -55,22 +55,6 @@ int handle_one_request(int connection_fd)
   // Copy content to remaining bytes
   memcpy(&write_buffer[4], reply, len);
   return write_full(connection_fd, write_buffer, 4 + len);
-}
-
-void handle_connection(int connection_fd)
-{
-  char read_buffer[64] = {};
-  ssize_t byte_count = read(connection_fd, read_buffer, sizeof(read_buffer) - 1);
-
-  if (byte_count < 0)
-  {
-    printf("read() error\n");
-    return;
-  }
-
-  printf("Client says: %s\n", read_buffer);
-  char write_buffer[] = "world";
-  write(connection_fd, write_buffer, strlen(write_buffer));
 }
 
 int main()
@@ -126,7 +110,6 @@ int main()
       }
     }
 
-    handle_connection(connection_fd);
     close(connection_fd);
   }
 }
